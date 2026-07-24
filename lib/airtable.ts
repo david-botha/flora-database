@@ -28,12 +28,12 @@ type ListResponse = {
 function requireEnv(name: string): string {
   const value = process.env[name]
   if (!value) {
-    throw new Error(`Missing ${name}. Copy .env.local.example to .env.local and fill it in.`)
+    throw new Error(`Missing ${name}.`)
   }
   return value
 }
 
-// Fetches every record from the table, following Airtable's pagination.
+// Fetches every record from the table
 export async function getPlants(): Promise<AirtableRecord[]> {
   'use cache'
   cacheLife({ stale: 1800, revalidate: 1800, expire: 5400 })
