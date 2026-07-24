@@ -70,6 +70,12 @@ export async function getPlants(): Promise<AirtableRecord[]> {
   return all
 }
 
+// Fetches a single record from the table
+export async function getPlant(id: string): Promise<AirtableRecord | null> {
+  const plants = await getPlants()
+  return plants.find(plant => plant.id === id) ?? null
+}
+
 // Reads a field as a string, tolerating Airtable's varied value shapes.
 export function text(record: AirtableRecord, field: string): string | null {
   const value = record.fields[field]

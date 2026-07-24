@@ -1,5 +1,6 @@
 import { getPlants, text, attachments } from '@/lib/airtable'
 import { FIELDS } from '@/lib/fields'
+import Link from 'next/link'
 
 export default async function Home() {
   const plants = await getPlants()
@@ -11,11 +12,15 @@ export default async function Home() {
         const src = photo?.thumbnails?.large?.url ?? photo?.url
 
         return (
-          <div key={plant.id} className="flex flex-col h-80 rounded-lg border overflow-hidden">
-            <div className='italic font-medium'>{text(plant, FIELDS.scientificName)}</div>
+          <Link
+            key={plant.id}
+            href={`/plants/${plant.id}`}
+            className="flex flex-col h-80 rounded-lg border overflow-hidden"
+          >
+            <div className="italic font-medium">{text(plant, FIELDS.scientificName)}</div>
             <div>{text(plant, FIELDS.commonNames)}</div>
             {src && <img src={src} className="w-full flex-1 object-cover" />}
-          </div>
+          </Link>
         )
       })}
     </div>
