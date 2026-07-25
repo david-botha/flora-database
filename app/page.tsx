@@ -15,11 +15,17 @@ export default async function Home() {
           <Link
             key={plant.id}
             href={`/plants/${plant.id}`}
-            className="flex flex-col h-80 rounded-lg border overflow-hidden"
+            className="flex flex-col rounded-lg border overflow-hidden"
           >
-            <div className="italic font-medium">{text(plant, FIELDS.scientificName)}</div>
-            <div>{text(plant, FIELDS.commonNames)}</div>
-            {src && <img src={src} className="w-full flex-1 object-cover" />}
+            {src && <img src={src} className="w-full aspect-square object-cover" />}
+            <div className="p-3">
+              <div className="italic font-medium line-clamp-2">
+                {text(plant, FIELDS.scientificName)}
+              </div>
+              <div className="text-sm text-gray-600 line-clamp-1">
+                {text(plant, FIELDS.commonNames) ?? '—'}
+              </div>
+            </div>
           </Link>
         )
       })}
