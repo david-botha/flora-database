@@ -19,7 +19,7 @@ export default async function Home() {
           >
             {src && <img src={src} className="w-full aspect-square object-cover" />}
             <div className="p-3">
-              <div className="italic font-medium line-clamp-2">
+              <div className="italic font-serif font-medium line-clamp-2">
                 {text(plant, FIELDS.scientificName)}
               </div>
               <div className="text-sm text-gray-600 line-clamp-1">

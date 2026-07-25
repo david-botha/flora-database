@@ -23,7 +23,7 @@ export default async function PlantPage({ params }: PageProps<'/plants/[id]'>) {
       </Link>
 
       <header>
-        <h1 className="text-3xl itatlic font-semibold">{text(plant, FIELDS.scientificName)}</h1>
+        <h1 className="text-3xl italic font-serif font-semibold">{text(plant, FIELDS.scientificName)}</h1>
         <p className="text-lg text-gray-600">{text(plant, FIELDS.commonNames)}</p>
       </header>
 
