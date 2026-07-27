@@ -23,11 +23,13 @@ export default async function PlantPage({ params }: PageProps<'/plants/[id]'>) {
       </Link>
 
       <header>
-        <h1 className="text-3xl italic font-serif font-semibold">{text(plant, FIELDS.scientificName)}</h1>
+        <h1 className="text-3xl italic font-serif font-semibold">
+          {text(plant, FIELDS.scientificName)}
+        </h1>
         <p className="text-lg text-gray-600">{text(plant, FIELDS.commonNames)}</p>
       </header>
 
-      <dl>
+      <dl className="flex flex-col gap-4">
         <Field label="Family" value={text(plant, FIELDS.family)} />
         <Field label="Status" value={text(plant, FIELDS.status)} />
         <Field label="Flower colour" value={text(plant, FIELDS.flowerColour)} />
@@ -54,7 +56,7 @@ function Field({ label, value }: { label: string; value: string | null }) {
   if (!value) return null
   return (
     <div>
-      <dt className="text-sm font-medium text-gray-500">{label}</dt>
+      <dt className="text-sm font-medium text-gray-500 mb-1">{label}</dt>
       <dd className="whitespace-pre-line">{value}</dd>
     </div>
   )
