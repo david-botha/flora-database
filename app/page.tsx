@@ -1,6 +1,7 @@
 import { getPlants, text, attachments } from '@/lib/airtable'
 import { filterPlants, one } from '@/lib/search'
 import { FIELDS } from '@/lib/fields'
+import { status } from '@/lib/status'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { SearchBox } from './search-box'
@@ -20,7 +21,6 @@ export default function Home({ searchParams }: PageProps<'/'>) {
   )
 }
 
-
 async function Results({ searchParams }: Pick<PageProps<'/'>, 'searchParams'>) {
   const { q } = await searchParams
   const plants = filterPlants(await getPlants(), one(q))
@@ -30,6 +30,7 @@ async function Results({ searchParams }: Pick<PageProps<'/'>, 'searchParams'>) {
       {plants.map(plant => {
         const photo = attachments(plant, FIELDS.photos)[0]
         const src = photo?.thumbnails?.large?.url ?? photo?.url
+        const badge = status(text(plant, FIELDS.status))
 
         return (
           <Link
@@ -38,13 +39,22 @@ async function Results({ searchParams }: Pick<PageProps<'/'>, 'searchParams'>) {
             className="flex flex-col rounded-lg border overflow-hidden"
           >
             {src && <img src={src} className="w-full aspect-square object-cover" />}
-            <div className="p-3">
+            <div className="flex flex-1 flex-col gap-1 p-3">
               <div className="italic font-serif font-medium line-clamp-2">
                 {text(plant, FIELDS.scientificName)}
               </div>
               <div className="text-sm text-gray-600 line-clamp-1">
                 {text(plant, FIELDS.commonNames) ?? '—'}
               </div>
+              {badge && (
+                <div className="mt-auto pt-2">
+                  <span
+                    className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.chip}`}
+                  >
+                    {badge.label}
+                  </span>
+                </div>
+              )}
             </div>
           </Link>
         )
