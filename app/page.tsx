@@ -10,7 +10,11 @@ export default function Home({ searchParams }: PageProps<'/'>) {
   return (
     <>
       <div className="p-8 pb-0">
-        <Suspense fallback={<div className="h-10 rounded-lg border bg-gray-50" />}>
+        <Suspense
+          fallback={
+            <div className="h-11 max-w-md rounded-xl bg-white shadow-lg ring-2 ring-gray-100" />
+          }
+        >
           <SearchBox />
         </Suspense>
       </div>
@@ -36,9 +40,15 @@ async function Results({ searchParams }: Pick<PageProps<'/'>, 'searchParams'>) {
           <Link
             key={plant.id}
             href={`/plants/${plant.id}`}
-            className="flex flex-col rounded-lg border overflow-hidden"
+            className="group flex flex-col overflow-hidden rounded-xl bg-white ring-1 ring-gray-200 shadow-lg transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:ring-gray-300 motion-reduce:hover:translate-y-0"
           >
-            {src && <img src={src} className="w-full aspect-square object-cover" />}
+            {src && (
+              <img
+                src={src}
+                alt={text(plant, FIELDS.scientificName) ?? ''}
+                className="w-full aspect-square object-cover"
+              />
+            )}
             <div className="flex flex-1 flex-col gap-1 p-3">
               <div className="italic font-serif font-medium line-clamp-2">
                 {text(plant, FIELDS.scientificName)}
@@ -47,7 +57,7 @@ async function Results({ searchParams }: Pick<PageProps<'/'>, 'searchParams'>) {
                 {text(plant, FIELDS.commonNames) ?? '—'}
               </div>
               {badge && (
-                <div className="mt-auto pt-2">
+                <div className="mt-auto">
                   <span
                     className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${badge.chip}`}
                   >

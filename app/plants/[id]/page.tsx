@@ -24,8 +24,12 @@ export default async function PlantPage({ params }: PageProps<'/plants/[id]'>) {
 
   return (
     <main className="max-w-7xl mx-auto p-8 flex flex-col gap-6">
-      <Link href="/" className="text-sm text-gray-500 hover:underline">
-        ← Back to all plants
+      <Link
+        href="/"
+        className="group inline-flex items-center gap-1.5 self-start text-sm text-gray-500 transition-colors hover:text-gray-800"
+      >
+        <span className="transition-transform group-hover:-translate-x-0.5">←</span>
+        Back to all plants
       </Link>
 
       <header>
