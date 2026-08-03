@@ -37,3 +37,4 @@ export function status(value: string | null): Status | null {
   if (!value) return null
   return STATUSES[value.trim() as keyof typeof STATUSES] ?? null
 }
+
