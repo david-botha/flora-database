@@ -1,5 +1,5 @@
 import { getPlants, text, attachments } from '@/lib/airtable'
-import { filterPlants, one } from '@/lib/search'
+import { filterByField, filterPlants, many, one, sortPlants } from '@/lib/search'
 import { FIELDS } from '@/lib/fields'
 import { status } from '@/lib/status'
 import { Suspense } from 'react'
@@ -26,8 +26,12 @@ export default function Home({ searchParams }: PageProps<'/'>) {
 }
 
 async function Results({ searchParams }: Pick<PageProps<'/'>, 'searchParams'>) {
-  const { q } = await searchParams
-  const plants = filterPlants(await getPlants(), one(q))
+  const { q, status: statusFilter, colour, sort } = await searchParams
+  const all = await getPlants()
+  const found = filterPlants(all, one(q))
+  const byStatus = filterByField(found, FIELDS.status, many(statusFilter))
+  const byColour = filterByField(byStatus, FIELDS.flowerColour, many(colour))
+  const plants = sortPlants(byColour, one(sort))
 
   return (
     <div className="grid gap-6 p-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

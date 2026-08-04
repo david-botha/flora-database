@@ -7,6 +7,12 @@ export function one(value: string | string[] | undefined): string | undefined {
   return first?.trim() || undefined
 }
 
+export function many(value: string | string[] | undefined): string[] {
+  const values = Array.isArray(value) ? value : [value]
+
+  return values.map(item => item?.trim()).filter((v): v is string => Boolean(v))
+}
+
 export function filterPlants(plants: AirtableRecord[], q: string | undefined): AirtableRecord[] {
   if (!q) return plants
 
@@ -23,5 +29,34 @@ export function filterPlants(plants: AirtableRecord[], q: string | undefined): A
       .toLowerCase()
 
     return haystack.includes(needle)
+  })
+}
+
+export function filterByField(
+  plants: AirtableRecord[],
+  field: string,
+  selected: string[]
+): AirtableRecord[] {
+  if (selected.length === 0) return plants
+
+  return plants.filter(plant => {
+    const value = text(plant, field)
+    if (!value) return false
+
+    return selected.includes(value)
+  })
+}
+
+export function sortPlants(plants: AirtableRecord[], sort: string | undefined): AirtableRecord[] {
+  const field = sort === 'common' ? FIELDS.commonNames : FIELDS.scientificName
+
+  return plants.toSorted((a, b) => {
+    const nameA = text(a, field)
+    const nameB = text(b, field)
+
+    if (!nameA && !nameB) return 0
+    if (!nameA) return 1
+    if (!nameB) return -1
+    return nameA.localeCompare(nameB)
   })
 }
