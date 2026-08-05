@@ -1,25 +1,9 @@
-'use client'
+type Props = {
+  value: string
+  onChange: (value: string) => void
+}
 
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
-
-export function SearchBox() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-
-  const [value, setValue] = useState(searchParams.get('q') ?? '')
-
-  function handleChange(next: string) {
-    setValue(next)
-    const params = new URLSearchParams(searchParams)
-    if (next) {
-      params.set('q', next)
-    } else {
-      params.delete('q')
-    }
-    router.replace(`/?${params}`)
-  }
-
+export function SearchBox({ value, onChange }: Props) {
   return (
     <div className="relative">
       <svg
@@ -37,14 +21,14 @@ export function SearchBox() {
         type="text"
         placeholder="Search by name or family…"
         value={value}
-        onChange={e => handleChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         aria-label="Search plants"
         className="w-full rounded-lg bg-white py-3 pl-10 pr-4 shadow-sm ring-1 ring-gray-200 transition duration-300 placeholder:text-gray-400 hover:ring-gray-300 focus:outline-none focus:ring-emerald-600/60"
       />
       {value && (
         <button
           type="button"
-          onClick={() => handleChange('')}
+          onClick={() => onChange('')}
           aria-label="Clear search"
           className="absolute right-2 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
         >

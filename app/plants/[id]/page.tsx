@@ -1,10 +1,17 @@
-import { getPlant, text, attachments } from '@/lib/airtable'
+import { getPlant, getPlants } from '@/lib/airtable'
+import { text, attachments } from '@/lib/plant'
 import { FIELDS } from '@/lib/fields'
 import { status } from '@/lib/status'
 import { FLOWER_COLOURS } from '@/lib/flower-colours'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import Link from 'next/link'
+
+// Prebuilds all 256 plant pages at build time, so visiting one is a static file.
+export async function generateStaticParams() {
+  const plants = await getPlants()
+  return plants.map(plant => ({ id: plant.id }))
+}
 
 // The shell renders straight away; the plant itself streams in behind it.
 export default function PlantPage({ params }: PageProps<'/plants/[id]'>) {

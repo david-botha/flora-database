@@ -1,4 +1,6 @@
 import { cacheLife, cacheTag } from 'next/cache'
+import { FIELDS } from './fields'
+import { attachments } from './plant'
 
 export type Attachment = {
   id: string
@@ -70,31 +72,35 @@ export async function getPlants(): Promise<AirtableRecord[]> {
   return all
 }
 
+/* 
+  Fetches every record, trimmed to just what the grid renders.
+  Scientific Name, Common Names, Family, Status, Flower Colour, one thumbnail.
+  Anything else needs getPlants(). 
+*/
+export async function getGridPlants(): Promise<AirtableRecord[]> {
+  const plants = await getPlants()
+
+  return plants.map(plant => {
+    const photo = attachments(plant, FIELDS.photos)[0]
+    const thumbnail = photo?.thumbnails?.large?.url ?? photo?.url
+
+    return {
+      id: plant.id,
+      createdTime: plant.createdTime,
+      fields: {
+        [FIELDS.scientificName]: plant.fields[FIELDS.scientificName],
+        [FIELDS.commonNames]: plant.fields[FIELDS.commonNames],
+        [FIELDS.family]: plant.fields[FIELDS.family],
+        [FIELDS.status]: plant.fields[FIELDS.status],
+        [FIELDS.flowerColour]: plant.fields[FIELDS.flowerColour],
+        [FIELDS.photos]: thumbnail ? [{ url: thumbnail }] : [],
+      },
+    }
+  })
+}
+
 // Fetches a single record from the table
 export async function getPlant(id: string): Promise<AirtableRecord | null> {
   const plants = await getPlants()
   return plants.find(plant => plant.id === id) ?? null
-}
-
-// Reads a field as a string, tolerating Airtable's varied value shapes.
-export function text(record: AirtableRecord, field: string): string | null {
-  const value = record.fields[field]
-  if (value == null) return null
-  if (typeof value === 'string') return value.trim() || null
-  if (typeof value === 'number' || typeof value === 'boolean') {
-    return String(value)
-  }
-  // Single-select and lookup fields can arrive as arrays.
-  if (Array.isArray(value)) {
-    const joined = value.filter(v => typeof v === 'string').join(', ')
-    return joined || null
-  }
-  return null
-}
-
-// Returns every attachment on a field, in the order the collector arranged them.
-export function attachments(record: AirtableRecord, field: string): Attachment[] {
-  const value = record.fields[field]
-  if (!Array.isArray(value)) return []
-  return value.filter((v): v is Attachment => v != null && typeof v === 'object' && 'url' in v)
 }

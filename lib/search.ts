@@ -1,17 +1,6 @@
-import { AirtableRecord } from './airtable'
+import type { AirtableRecord } from './airtable'
 import { FIELDS } from '@/lib/fields'
-import { text } from '@/lib/airtable'
-
-export function one(value: string | string[] | undefined): string | undefined {
-  const first = Array.isArray(value) ? value[0] : value
-  return first?.trim() || undefined
-}
-
-export function many(value: string | string[] | undefined): string[] {
-  const values = Array.isArray(value) ? value : [value]
-
-  return values.map(item => item?.trim()).filter((v): v is string => Boolean(v))
-}
+import { text } from '@/lib/plant'
 
 export function filterPlants(plants: AirtableRecord[], q: string | undefined): AirtableRecord[] {
   if (!q) return plants
@@ -45,40 +34,6 @@ export function filterByField(
 
     return selected.includes(value)
   })
-}
-
-// Adds a value to the URL if it's missing, removes it if it's there.
-export function toggleParam(
-  params: URLSearchParams,
-  key: string,
-  value: string
-): string {
-  const next = new URLSearchParams(params)
-  const current = next.getAll(key)
-
-  next.delete(key)
-  for (const item of current) {
-    if (item !== value) next.append(key, item)
-  }
-  if (!current.includes(value)) next.append(key, value)
-
-  return next.toString()
-}
-
-export function setParam(
-  params: URLSearchParams,
-  key: string,
-  value: string | undefined
-): string {
-  const next = new URLSearchParams(params)
-
-  if (value) {
-    next.set(key, value)
-  } else {
-    next.delete(key)
-  }
-
-  return next.toString()
 }
 
 export function sortPlants(plants: AirtableRecord[], sort: string | undefined): AirtableRecord[] {

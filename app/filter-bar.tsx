@@ -1,5 +1,3 @@
-import Link from 'next/link'
-import { setParam, toggleParam } from '@/lib/search'
 import { status as statusMeta } from '@/lib/status'
 import { flowerColour } from '@/lib/flower-colours'
 
@@ -9,7 +7,6 @@ const SORTS = [
 ] as const
 
 type Props = {
-  params: URLSearchParams
   statuses: string[]
   colours: string[]
   selectedStatuses: string[]
@@ -17,10 +14,13 @@ type Props = {
   sort: string
   total: number
   showing: number
+  onToggleStatus: (value: string) => void
+  onToggleColour: (value: string) => void
+  onSort: (value: string) => void
+  onClear: () => void
 }
 
 export function FilterBar({
-  params,
   statuses,
   colours,
   selectedStatuses,
@@ -28,6 +28,10 @@ export function FilterBar({
   sort,
   total,
   showing,
+  onToggleStatus,
+  onToggleColour,
+  onSort,
+  onClear,
 }: Props) {
   const active = selectedStatuses.length + selectedColours.length
   const filtered = showing !== total
@@ -78,7 +82,7 @@ export function FilterBar({
             return (
               <Chip
                 key={value}
-                href={`/?${toggleParam(params, 'status', value)}`}
+                onClick={() => onToggleStatus(value)}
                 on={on}
                 onClass={meta ? `${meta.chip} shadow-sm` : undefined}
               >
@@ -100,7 +104,7 @@ export function FilterBar({
             return (
               <Chip
                 key={value}
-                href={`/?${toggleParam(params, 'colour', value)}`}
+                onClick={() => onToggleColour(value)}
                 on={on}
                 onClass={`${meta.chip} shadow-sm`}
               >
@@ -115,7 +119,7 @@ export function FilterBar({
           {SORTS.map(option => (
             <Chip
               key={option.value}
-              href={`/?${setParam(params, 'sort', option.value === 'scientific' ? undefined : option.value)}`}
+              onClick={() => onSort(option.value)}
               on={sort === option.value}
               onClass="bg-emerald-50 text-emerald-800 ring-emerald-600/20 shadow-sm"
             >
@@ -126,9 +130,10 @@ export function FilterBar({
 
         {active > 0 && (
           <div>
-            <Link
-              href={`/?${clearFilters(params)}`}
-              className="inline-flex items-center gap-1.5 text-sm text-gray-500 underline-offset-4 transition hover:text-gray-900 hover:underline"
+            <button
+              type="button"
+              onClick={onClear}
+              className="inline-flex cursor-pointer items-center gap-1.5 text-sm text-gray-500 underline-offset-4 transition hover:text-gray-900 hover:underline"
             >
               <svg
                 className="size-3.5"
@@ -141,19 +146,12 @@ export function FilterBar({
                 <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
               </svg>
               Clear filters
-            </Link>
+            </button>
           </div>
         )}
       </div>
     </details>
   )
-}
-
-function clearFilters(params: URLSearchParams): string {
-  const next = new URLSearchParams(params)
-  next.delete('status')
-  next.delete('colour')
-  return next.toString()
 }
 
 function Group({ label, children }: { label: string; children: React.ReactNode }) {
@@ -168,25 +166,26 @@ function Group({ label, children }: { label: string; children: React.ReactNode }
 }
 
 function Chip({
-  href,
+  onClick,
   on,
   onClass = 'bg-gray-900 text-white ring-gray-900 shadow-sm',
   children,
 }: {
-  href: string
+  onClick: () => void
   on: boolean
   onClass?: string
   children: React.ReactNode
 }) {
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
+      onClick={onClick}
       aria-pressed={on}
-      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm ring-1 ring-inset transition duration-200 ${
+      className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1 text-sm ring-1 ring-inset transition duration-200 ${
         on ? onClass : 'bg-white text-gray-700 ring-gray-200 hover:bg-gray-50 hover:ring-gray-300'
       }`}
     >
       {children}
-    </Link>
+    </button>
   )
 }
