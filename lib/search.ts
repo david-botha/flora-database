@@ -47,6 +47,40 @@ export function filterByField(
   })
 }
 
+// Adds a value to the URL if it's missing, removes it if it's there.
+export function toggleParam(
+  params: URLSearchParams,
+  key: string,
+  value: string
+): string {
+  const next = new URLSearchParams(params)
+  const current = next.getAll(key)
+
+  next.delete(key)
+  for (const item of current) {
+    if (item !== value) next.append(key, item)
+  }
+  if (!current.includes(value)) next.append(key, value)
+
+  return next.toString()
+}
+
+export function setParam(
+  params: URLSearchParams,
+  key: string,
+  value: string | undefined
+): string {
+  const next = new URLSearchParams(params)
+
+  if (value) {
+    next.set(key, value)
+  } else {
+    next.delete(key)
+  }
+
+  return next.toString()
+}
+
 export function sortPlants(plants: AirtableRecord[], sort: string | undefined): AirtableRecord[] {
   const field = sort === 'common' ? FIELDS.commonNames : FIELDS.scientificName
 

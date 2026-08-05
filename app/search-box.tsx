@@ -21,7 +21,7 @@ export function SearchBox() {
   }
 
   return (
-    <div className="relative max-w-md">
+    <div className="relative">
       <svg
         className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-gray-400"
         fill="none"
@@ -39,7 +39,7 @@ export function SearchBox() {
         value={value}
         onChange={e => handleChange(e.target.value)}
         aria-label="Search plants"
-        className="w-full rounded-xl bg-white py-2.5 pl-10 pr-4 shadow-lg ring-2 ring-gray-100 transition duration-300 placeholder:text-gray-400 hover:ring-gray-200 focus:outline-none focus:ring-emerald-600/60"
+        className="w-full rounded-lg bg-white py-3 pl-10 pr-4 shadow-sm ring-1 ring-gray-200 transition duration-300 placeholder:text-gray-400 hover:ring-gray-300 focus:outline-none focus:ring-emerald-600/60"
       />
       {value && (
         <button
