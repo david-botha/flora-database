@@ -5,7 +5,7 @@ export function SiteHeader() {
     <header className="border-b border-gray-200 bg-white">
       <Link
         href="/"
-        className="group flex items-center gap-3.5 px-8 py-5 transition-colors hover:text-gray-600"
+        className="group flex items-center gap-3.5 px-4 sm:px-8 py-5 transition-colors hover:text-gray-600"
       >
         {/* The same SVG the grid shows when nothing matches a filter. */}
         <svg

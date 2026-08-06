@@ -83,7 +83,7 @@ export function PlantGrid({ plants }: { plants: AirtableRecord[] }) {
           No plants match these filters.
         </p>
       ) : (
-        <div className="grid gap-6 p-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-6 p-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {visible.map(plant => {
             const photo = attachments(plant, FIELDS.photos)[0]
             const src = photo?.thumbnails?.large?.url ?? photo?.url
