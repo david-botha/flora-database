@@ -3,6 +3,7 @@ import { text, attachments } from '@/lib/plant'
 import { FIELDS } from '@/lib/fields'
 import { status } from '@/lib/status'
 import { FLOWER_COLOURS } from '@/lib/flower-colours'
+import { PhotoGallery } from './photo-gallery'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import Link from 'next/link'
@@ -97,16 +98,7 @@ async function Plant({ params }: Pick<PageProps<'/plants/[id]'>, 'params'>) {
         <Field label="Notes" value={text(plant, FIELDS.notes)} />
       </dl>
 
-      <section className="grid gap-4 sm:grid-cols-2">
-        {photos.map(photo => (
-          <img
-            key={photo.id}
-            src={photo.thumbnails?.large?.url ?? photo.url}
-            alt={text(plant, FIELDS.scientificName) ?? photo.filename}
-            className="w-full rounded-lg aspect-square object-cover"
-          />
-        ))}
-      </section>
+      <PhotoGallery photos={photos} alt={text(plant, FIELDS.scientificName)} />
     </>
   )
 }
