@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Lora } from 'next/font/google'
 import './globals.css'
+import { SiteHeader } from './site-header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -19,7 +20,7 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   title: 'Pretres — Flora Database',
-  description: 'A photographic record of plants',
+  description: 'A field guide to the trees and wild flowers of Pretoria',
 }
 
 export default function RootLayout({
@@ -29,7 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <SiteHeader />
+        {children}
+      </body>
     </html>
   )
 }
