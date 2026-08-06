@@ -111,9 +111,9 @@ async function Plant({ params }: Pick<PageProps<'/plants/[id]'>, 'params'>) {
   )
 }
 
-function Skeleton() {
+export function Skeleton() {
   return (
-    <div className="flex flex-col gap-6" aria-hidden="true">
+    <div className="flex flex-col gap-6 motion-safe:animate-pulse" aria-hidden="true">
       <div className="h-9 w-2/3 rounded bg-gray-200" />
       <div className="h-6 w-1/3 rounded bg-gray-200" />
       <div className="h-24 rounded bg-gray-200" />
