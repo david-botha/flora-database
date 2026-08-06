@@ -1,0 +1,19 @@
+name: Scheduled rebuild
+
+# Airtable's attachment URLs expire after roughly two hours.
+# They get baked into the HTML at build time, so without a periodic rebuild
+# every photo on the site would eventually 404. Rebuilding every 45 minutes
+# keeps them comfortably inside that window.
+on:
+  schedule:
+    - cron: '*/45 * * * *'
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        run: curl --fail --silent --show-error -X POST "$DEPLOY_HOOK"
+        env:
+          DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
