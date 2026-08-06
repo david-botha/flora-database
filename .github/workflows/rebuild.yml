@@ -1,12 +1,12 @@
 name: Scheduled rebuild
 
-# Airtable's attachment URLs expire after roughly two hours.
-# They get baked into the HTML at build time, so without a periodic rebuild
-# every photo on the site would eventually 404. Rebuilding every 45 minutes
-# keeps them comfortably inside that window.
+# Airtable's attachment URLs expire after roughly two hours, and they get baked
+# into the HTML at build time, so the site needs a periodic rebuild or every
+# photo eventually 404s. Every 30 minutes leaves room for GitHub's scheduled
+# runs to be late or skipped.
 on:
   schedule:
-    - cron: '*/45 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 jobs:
