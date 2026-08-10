@@ -74,7 +74,7 @@ export function FilterBar({
       </summary>
 
       <div className="flex flex-col gap-5 border-t border-gray-100 px-4 py-4">
-        <Group label="Status">
+        <Group label="Status" stack={true}>
           {statuses.map(value => {
             const meta = statusMeta(value)
             const on = selectedStatuses.includes(value)
@@ -154,13 +154,29 @@ export function FilterBar({
   )
 }
 
-function Group({ label, children }: { label: string; children: React.ReactNode }) {
+function Group({
+  label,
+  stack = false,
+  children,
+}: {
+  label: string
+  stack?: boolean
+  children: React.ReactNode
+}) {
   return (
     <div className="flex flex-col gap-2 lg:flex-row lg:gap-3">
       <div className="pt-1 text-xs font-semibold tracking-wide text-gray-500 uppercase lg:w-28 lg:shrink-0">
         {label}
       </div>
-      <div className="flex flex-wrap gap-2">{children}</div>
+      <div
+        className={
+          stack
+            ? 'flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap'
+            : 'flex flex-wrap gap-2'
+        }
+      >
+        {children}
+      </div>
     </div>
   )
 }
