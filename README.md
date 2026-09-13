@@ -4,6 +4,8 @@
 
 **Available at:** [pretres.co.za](https://pretres.co.za).
 
+> **Note (September 2026):** Photos are temporarily unavailable. Airtable's API quota for the month is exhausted, so the scheduled rebuilds that refresh its expiring attachment URLs can't run. Plant data, search, and filtering are unaffected. Images are soon to be migrated to permanent storage to remove the dependency.
+
 ## Screenshots
 
 ![Grid view — search, filters, and a photo grid of plants](docs/screenshots/grid-view.png)
