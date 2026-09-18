@@ -34,11 +34,31 @@ function requireEnv(name: string): string {
   return value
 }
 
+/*
+  TEMPORARY until the Airtable quota resets on 1 October 2026
+
+  The hourly rebuilds that kept attachment URLs alive used ~2,160 API calls a
+  month against a limit of 1,000. Photos no longer need Airtable (see lib/photos.ts)
+  but plant text still does, which leaves the site unbuildable.
+
+  data/plants.json is that text, recovered from an archive of the live site
+  taken on 13 September 2026. Setting PLANTS_SNAPSHOT=1 builds from it and
+  makes no Airtable request at all.
+
+  To revert: delete this block, the import, and data/plants.json.
+*/
+async function snapshot(): Promise<AirtableRecord[]> {
+  const { default: plants } = await import('@/data/plants.json')
+  return plants as AirtableRecord[]
+}
+
 // Fetches every record from the table
 export async function getPlants(): Promise<AirtableRecord[]> {
   'use cache'
   cacheLife({ stale: 1800, revalidate: 1800, expire: 5400 })
   cacheTag('plants')
+
+  if (process.env.PLANTS_SNAPSHOT === '1') return snapshot()
 
   const token = requireEnv('AIRTABLE_TOKEN')
   const baseId = requireEnv('AIRTABLE_BASE_ID')
