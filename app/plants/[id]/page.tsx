@@ -1,5 +1,6 @@
 import { getPlant, getPlants } from '@/lib/airtable'
-import { text, attachments } from '@/lib/plant'
+import { text } from '@/lib/plant'
+import { photosFor } from '@/lib/photos'
 import { FIELDS } from '@/lib/fields'
 import { status } from '@/lib/status'
 import { FLOWER_COLOURS } from '@/lib/flower-colours'
@@ -39,7 +40,7 @@ async function Plant({ params }: Pick<PageProps<'/plants/[id]'>, 'params'>) {
 
   if (!plant) notFound()
 
-  const photos = attachments(plant, FIELDS.photos)
+  const photos = photosFor(plant.id)
   const raw = text(plant, FIELDS.status)
   const badge = status(raw)
   const colour = FLOWER_COLOURS[text(plant, FIELDS.flowerColour)?.trim() ?? '']

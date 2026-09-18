@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { text, attachments } from '@/lib/plant'
+import { text } from '@/lib/plant'
+import { gridPhoto } from '@/lib/photos'
 import type { AirtableRecord } from '@/lib/airtable'
 import { filterByField, filterPlants, sortPlants } from '@/lib/search'
 import { FIELDS } from '@/lib/fields'
@@ -85,8 +86,7 @@ export function PlantGrid({ plants }: { plants: AirtableRecord[] }) {
       ) : (
         <div className="grid gap-6 p-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {visible.map(plant => {
-            const photo = attachments(plant, FIELDS.photos)[0]
-            const src = photo?.thumbnails?.large?.url ?? photo?.url
+            const photo = gridPhoto(plant.id)
             const badge = status(text(plant, FIELDS.status))
 
             return (
@@ -95,9 +95,9 @@ export function PlantGrid({ plants }: { plants: AirtableRecord[] }) {
                 href={`/plants/${plant.id}`}
                 className="group flex flex-col overflow-hidden rounded-xl bg-white ring-1 ring-gray-200 shadow-lg transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:ring-gray-300 motion-reduce:hover:translate-y-0"
               >
-                {src && (
+                {photo && (
                   <img
-                    src={src}
+                    src={photo.url}
                     alt={text(plant, FIELDS.scientificName) ?? ''}
                     loading="lazy"
                     className="w-full aspect-square object-cover"

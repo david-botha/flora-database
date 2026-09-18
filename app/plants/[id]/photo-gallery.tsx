@@ -1,9 +1,9 @@
 'use client'
 
-import type { Attachment } from '@/lib/airtable'
+import type { Photo } from '@/lib/photos'
 import { useCallback, useEffect, useState } from 'react'
 
-export function PhotoGallery({ photos, alt }: { photos: Attachment[]; alt: string | null }) {
+export function PhotoGallery({ photos, alt }: { photos: Photo[]; alt: string | null }) {
   const [index, setIndex] = useState<number | null>(null)
   const open = index === null ? null : photos[index]
 
@@ -43,14 +43,15 @@ export function PhotoGallery({ photos, alt }: { photos: Attachment[]; alt: strin
         {photos.map((photo, i) => (
           <button
             type="button"
-            key={photo.id}
+            key={photo.key}
             onClick={() => setIndex(i)}
             className="cursor-pointer rounded-lg overflow-hidden"
-            aria-label={`View ${alt ?? photo.filename} full size`}
+            aria-label={`View ${alt ?? 'photo'} full size`}
           >
             <img
-              src={photo.thumbnails?.large?.url ?? photo.url}
-              alt={alt ?? photo.filename}
+              src={photo.url}
+              alt={alt ?? ''}
+              loading="lazy"
               className="w-full aspect-square object-cover"
             />
           </button>
@@ -99,7 +100,7 @@ export function PhotoGallery({ photos, alt }: { photos: Attachment[]; alt: strin
 
           <img
             src={open.url}
-            alt={alt ?? open.filename}
+            alt={alt ?? ''}
             onClick={e => e.stopPropagation()}
             className="max-h-[90dvh] sm:h-[90vh] max-w-[90vw] w-auto object-contain"
           />

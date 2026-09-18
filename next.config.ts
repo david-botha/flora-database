@@ -4,9 +4,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   images: {
     remotePatterns: [
-      // Airtable serves attachment files from these hosts.
-      { protocol: 'https', hostname: 'v5.airtableusercontent.com' },
-      { protocol: 'https', hostname: 'dl.airtableusercontent.com' },
+      { protocol: 'https', hostname: 'pub-28b3d765f3384db0b9ca6aeecbdf9c7d.r2.dev' },
     ],
   },
 }
