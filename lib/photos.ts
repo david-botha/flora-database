@@ -35,9 +35,9 @@ function toPhoto(entry: Entry): Photo {
   }
 }
 
-// Every photo for a plant, largest first.
+// Every photo for a plant, with the grid-sized copy filtered out.
 export function photosFor(recordId: string): Photo[] {
-  return (photos[recordId] ?? []).map(toPhoto)
+  return (photos[recordId] ?? []).filter(entry => !entry.g).map(toPhoto)
 }
 
 // The grid-sized photo for a card, falling back to the largest available.
