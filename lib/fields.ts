@@ -7,5 +7,4 @@ export const FIELDS = {
   meaning: 'Meaning of Scientific name and synonyms',
   description: 'Description',
   notes: 'Notes',
-  photos: 'Official Photos',
 } as const

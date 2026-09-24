@@ -40,7 +40,7 @@ export function photosFor(recordId: string): Photo[] {
   return (photos[recordId] ?? []).filter(entry => !entry.g).map(toPhoto)
 }
 
-// The grid-sized photo for a card, falling back to the largest available.
+// The grid-sized photo for a card, falling back to the first photo.
 export function gridPhoto(recordId: string): Photo | null {
   const entries = photos[recordId]
   if (!entries?.length) return null

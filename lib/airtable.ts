@@ -1,20 +1,6 @@
 import { cacheLife, cacheTag } from 'next/cache'
 import { FIELDS } from './fields'
 
-export type Attachment = {
-  id: string
-  url: string
-  filename: string
-  type: string
-  width?: number
-  height?: number
-  thumbnails?: {
-    small?: { url: string; width: number; height: number }
-    large?: { url: string; width: number; height: number }
-    full?: { url: string; width: number; height: number }
-  }
-}
-
 export type AirtableRecord = {
   id: string
   createdTime: string

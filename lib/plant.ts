@@ -1,4 +1,4 @@
-import type { AirtableRecord, Attachment } from './airtable'
+import type { AirtableRecord } from './airtable'
 
 // Reads a field as a string, tolerating Airtable's varied value shapes.
 export function text(record: AirtableRecord, field: string): string | null {
@@ -14,11 +14,4 @@ export function text(record: AirtableRecord, field: string): string | null {
     return joined || null
   }
   return null
-}
-
-// Returns every attachment on a field, in the order the collector arranged them.
-export function attachments(record: AirtableRecord, field: string): Attachment[] {
-  const value = record.fields[field]
-  if (!Array.isArray(value)) return []
-  return value.filter((v): v is Attachment => v != null && typeof v === 'object' && 'url' in v)
 }
