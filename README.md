@@ -4,8 +4,6 @@
 
 **Available at:** [pretres.co.za](https://pretres.co.za).
 
-> **Note (September 2026):** Airtable's API quota for the month is exhausted, so until 1 October the site is built from a snapshot of the plant text taken on 13 September. Edits made in Airtable since then won't appear until the quota resets. Photos are unaffected. They now come from Cloudflare R2 (see [Photos](#photos)).
-
 ## Screenshots
 
 ![Grid view — search, filters, and a photo grid of plants](docs/screenshots/grid-view.png)
@@ -13,8 +11,8 @@
 ## Features
 
 - **Browse & search** — every plant in one grid, searchable by scientific name, common name, or family.
-- **Filter & sort** — filter by conservation status (native, invasive, weed, etc.) and flower colour; sort alphabetically by scientific or common name.
-- **Plant detail pages** — family, conservation status, flower colour, the meaning of the scientific name, a description, and control notes for invasive species.
+- **Filter & sort** — filter by status (native, invasive, weed, etc.) and flower colour; sort alphabetically by scientific or common name.
+- **Plant detail pages** — family, status, flower colour, the meaning of the scientific name, a description, and control notes for invasive species.
 - **Photo gallery** — a display of photos with keyboard (arrow keys, Esc) and click navigation.
 
 ## Stack
@@ -28,9 +26,9 @@
 
 - Data fetching is centralised in [`lib/airtable.ts`](lib/airtable.ts). `getPlants()` pages through the entire Airtable table. `getGridPlants()` and `getPlant()` both build on it.
 - Plant pages are fully static. `generateStaticParams` in [`app/plants/[id]/page.tsx`](app/plants/[id]/page.tsx) prebuilds every plant at build time, so visiting one serves a static file.
-- Search, filtering, and sorting runs client-side. [`app/page.tsx`](app/page.tsx) fetches the full plant list at build time and passes it as a prop. [`app/plant-grid.tsx`](app/plant-grid.tsx) filters/searches/sorts that list in the browser. The only part that can't be built ahead of time is the initial filter state, since it comes from the URL's query string. So the grid itself renders in the browser, where it reads the query string, using plant data that's already in the page.
+- Search, filtering, and sorting runs client-side. [`app/page.tsx`](app/page.tsx) calls `getGridPlants()` at build time, which trims every plant down to the fields the grid needs, and bakes that list into the page. [`app/plant-grid.tsx`](app/plant-grid.tsx) searches, filters, and sorts it in the browser. The initial filters come from the URL's query string, which doesn't exist at build time, so the grid isn't rendered on the server at all. It renders in the browser, which reads the query string and uses the plant data already in the page.
 - Photos are served from Cloudflare R2, not from Airtable. [`data/photos.json`](data/photos.json) maps each plant's record ID to its photos, and [`lib/photos.ts`](lib/photos.ts) turns those into URLs. Nothing about photos touches Airtable at build time.
-- The site is rebuilt on Vercel via a deploy hook triggered by [cron-job.org](https://cron-job.org), so edits made in Airtable show up without a manual deploy.
+- The site is rebuilt on Vercel every 24 hours via a deploy hook triggered by [cron-job.org](https://cron-job.org), so edits made in Airtable show up without a manual deploy.
 
 ## Photos
 
@@ -73,16 +71,16 @@ Open [http://localhost:3000](http://localhost:3000).
 
 The app reads these fields from the configured table (see [`lib/fields.ts`](lib/fields.ts)):
 
-| Field | Type | Used for |
-| --- | --- | --- |
-| `Scientific Name` | text | Title, search, default sort |
-| `Common Names` | text | Subtitle, search, alternate sort |
-| `Family` | text | Detail page, search |
-| `Status` | single select | Status badge, filter (e.g. *Native to Pretoria area*, *Listed Invasive*, *Weed* — see [`lib/status.ts`](lib/status.ts) for the full list and styling) |
-| `Flower colour` | single select | Colour badge, filter (see [`lib/flower-colours.ts`](lib/flower-colours.ts) for the recognised values) |
-| `Meaning of Scientific name and synonyms` | long text | Detail page |
-| `Description` | long text | Detail page |
-| `Notes` | long text | Detail page (e.g. control/eradication notes for invasives) |
+| Field                                     | Type          | Used for                                                                                                                                              |
+| ----------------------------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Scientific Name`                         | text          | Title, search, default sort                                                                                                                           |
+| `Common Names`                            | text          | Subtitle, search, alternate sort                                                                                                                      |
+| `Family`                                  | text          | Detail page, search                                                                                                                                   |
+| `Status`                                  | single select | Status badge, filter (e.g. _Native to Pretoria area_, _Listed Invasive_, _Weed_ — see [`lib/status.ts`](lib/status.ts) for the full list and styling) |
+| `Flower colour`                           | single select | Colour badge, filter (see [`lib/flower-colours.ts`](lib/flower-colours.ts) for the recognised values)                                                 |
+| `Meaning of Scientific name and synonyms` | long text     | Detail page                                                                                                                                           |
+| `Description`                             | long text     | Detail page                                                                                                                                           |
+| `Notes`                                   | long text     | Detail page (e.g. control/eradication notes for invasives)                                                                                            |
 
 ## Deployment
 

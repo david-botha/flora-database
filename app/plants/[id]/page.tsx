@@ -15,7 +15,7 @@ export async function generateStaticParams() {
   return plants.map(plant => ({ id: plant.id }))
 }
 
-// The shell renders straight away; the plant itself streams in behind it.
+// Every plant is rendered into the static HTML at build time, so nothing streams
 export default function PlantPage({ params }: PageProps<'/plants/[id]'>) {
   return (
     <main className="max-w-7xl mx-auto p-8 flex flex-col gap-6">
